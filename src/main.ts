@@ -18,7 +18,9 @@ const geometry = new THREE.SphereGeometry( 15, 32, 16 );
 //     emissive: 0x0000ff,
 //     emissiveIntensity: 0.2
 // });
-const material = new THREE.ShaderMaterial({vertexShader: vertexGlsl, fragmentShader: fragmentGlsl});
+const material = new THREE.RawShaderMaterial({vertexShader: vertexGlsl, fragmentShader: fragmentGlsl, uniforms: {
+	time: { value: 0.0 }, 
+}});
 const sphere = new THREE.Mesh( geometry, material ); 
 scene.add( sphere );
 
@@ -50,8 +52,13 @@ function createControls( camera: THREE.PerspectiveCamera ) {
     return controls;
 }
 
+const clock = new THREE.Clock();
 function animate() {
+    console.log(clock.getElapsedTime());
+    // material.uniforms['time'].value = clock.getDelta();
+    material.uniforms['time'].value = clock.getElapsedTime();
     controls.update();
 	renderer.render( scene, camera );
 }
+clock.start();
 renderer.setAnimationLoop( animate );
